@@ -4,7 +4,7 @@ import React from 'react';
 
 function App() {
   return (
-    <Quest_table/>
+    <Quest_Table/>
   );
 }
 
@@ -52,7 +52,7 @@ var myquest={
 }
 
 
-class Quest_table extends React.Component
+class Quest_Table extends React.Component
 {
   constructor()
   {
@@ -72,7 +72,7 @@ render()
   )
 }}
 
-class Quest_options extends React.Component
+class Quest_Options extends React.Component
 {
   constructor()
   {
@@ -89,11 +89,11 @@ render()
   )
 }}
 
-function wrapper(content) {
+function wrapper(content, tag_class) {
   let buffer=[]
   for(let elem in content)
   {
-  buffer.push(<p>{content[elem]}</p>)
+  buffer.push(<p class={tag_class}>{content[elem]}</p>)
   }
   return (
     buffer
