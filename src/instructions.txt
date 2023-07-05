@@ -1,0 +1,6 @@
+`insert` var name `insert`
+`move` to room `move`
+
+if{then{},else{}}
+
+ifsw{1{},2{},else{}}

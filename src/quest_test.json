@@ -1,0 +1,17 @@
+{
+    "variables":
+    {
+        "visible":{},
+        "hidden":{}
+    },
+    "start_from":"bedroom",
+    "rooms":
+    {
+        "main_room":{"text":"33","image":"","options":{"1":"22"}},
+        "kitchen":{},
+        "balcony":{},
+        "garage":{},
+        "final":{},
+        "bedroom":{}
+    }
+}
