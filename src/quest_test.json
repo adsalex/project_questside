@@ -1,13 +1,20 @@
 {
     "variables":
     {
-        "visible":{},
+        "visible":{"room":"main_room"},
         "hidden":{}
     },
     "start_from":"bedroom",
     "rooms":
     {
-        "main_room":{"text":"33","image":"","options":{"1":"22"}},
+        "main_room":
+        {"text":"33","image":"",
+        "options":[{"text":"перейти на кухню",
+        "ifsw":
+        {
+            "arg":"room"
+
+        }}]},
         "kitchen":{},
         "balcony":{},
         "garage":{},
