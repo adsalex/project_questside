@@ -15,8 +15,19 @@ var myquest={
       {"text":"вы в гостинной сейчас стоите","image":"",
       "options":[
           {"text":"перейти на кухню","move":"kitchen","change":{cell:"room",value:"kithcen 222"}},
-          {"text":"перейти в ванную"},
-          {"text":"перейти в спальню"}
+          {"text":"перейти в ванную", 
+          ifsw:{a_val:11,b_val:22, operator:"=",
+            then:{"move":"balcony","change":{cell:"room",value:"kithcen 453"}},
+            else:{"move":"balcony","change":{cell:"room",value:"kithcen 333"}}
+          },
+          "move":"balcony","change":{cell:"room",value:"kithcen 333"} },
+          
+          {"text":"перейти в спальню",
+            qswitch:{
+              cell:"",
+              cases:[],
+              qdefault:""}
+          }
      ]},
       "kitchen":
       {"text":"кухня, пахнет горелым","image":"",
@@ -51,9 +62,6 @@ function App() {
   );
 }
 
-
-
-
 class Quest_Table extends React.Component
 {
   constructor()
@@ -61,6 +69,9 @@ class Quest_Table extends React.Component
     super()
     this.state = {color: "red",current_room:myquest.start_from};
     this.transit=this.transit.bind(this)
+    this.post_transit=this.post_transit.bind(this)
+    this.ifswitch=this.ifswitch.bind(this)
+    this.qswitch_f=this.ifswitch.bind(this)
   }
 render()
 {
@@ -76,20 +87,50 @@ render()
     </div>
   )
 }
-transit(handler,index,room)
+
+qswitch_f()
 {
 
- 
-let commandbuff=myquest.rooms[room].options[index]
 
-if(commandbuff.change){
-myquest.variables.visible[commandbuff.change.cell]=commandbuff.change.value}
-
-if(commandbuff.move){
-this.setState({current_room:commandbuff.move})}
-console.log(myquest)
 }
 
+
+ifswitch(a_val,b_val,operator)
+{
+  let choise =false
+  switch(operator)
+  {
+    case "=" :{if(a_val==b_val){choise=true}}
+    case "<" :{if(a_val<b_val){choise=true}}
+    case ">" :{if(a_val>b_val){choise=true}}
+  }
+  if(choise){}
+}
+
+post_transit(trans_map)
+{
+  if(trans_map.change)
+  {
+  myquest.variables.visible[trans_map.change.cell]=trans_map.change.value
+  }
+  if(trans_map.move)
+  {
+  this.setState({current_room:trans_map.move})
+  }
+  console.log(myquest)
+}
+
+transit(handler,index,room)
+{ 
+let commandbuff=myquest.rooms[room].options[index]
+if(commandbuff.ifsw){
+  this.ifswitch(commandbuff.ifsw.a_val,commandbuff.ifsw.b_val,commandbuff.ifsw.operator)  
+}
+else
+{
+this.post_transit(commandbuff)
+}
+}
 
 }
 
