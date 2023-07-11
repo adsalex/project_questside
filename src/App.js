@@ -3,6 +3,7 @@ import './App.css';
 import React from 'react';
 
 var myquest={
+  music:["sr2.mp4","human.mp4"],
   "variables":
   {
       "visible":{"room":"22"},
@@ -88,6 +89,7 @@ render()
     room={this.state.current_room}
     trans_f={this.transit}></Quest_Options>
     </div>
+    <Audio_player/>
     </div>
   )
 }
@@ -229,7 +231,7 @@ render()
   for(let elem in this.props.options)
   {
     const constbuff =indcount
-    opt_buffer.push(<p > <span class="options" onClick={(handler)=>(this.props.trans_f(handler,constbuff,this.props.room))}>{this.props.options[elem].text}</span></p>)
+    opt_buffer.push(<p > <span className="options" onClick={(handler)=>(this.props.trans_f(handler,constbuff,this.props.room))}>{this.props.options[elem].text}</span></p>)
     indcount++
   }
   return opt_buffer
@@ -240,7 +242,7 @@ function wrapper(content, tag_class) {
   let buffer=[]
   for(let elem in content)
   {
-  buffer.push(<p class={tag_class}> <span>{content[elem]}</span></p>)
+  buffer.push(<p className={tag_class}> <span>{content[elem]}</span></p>)
   }
   return (
 
@@ -248,17 +250,69 @@ function wrapper(content, tag_class) {
   );
 }
 
-class audio_player extends React.Component
+class Audio_player extends React.Component
 {
   constructor()
   {
-    this.state={}
+    super()
+    this.state={track:Math.round(Math.random()*(myquest.music.length-1)),
+    no_muted:1,playing:0}
+    this.mute_unmute=this.mute_unmute.bind(this)
+    this.play_pause=this.play_pause.bind(this)
+    this.playlist_ctrl=this.playlist_ctrl.bind(this)
+    this.audioref=React.createRef()
   }
   render()
   {
-    return(<audio controls/>)
+    //let audio = new Audio('sr2.mp4');
+    
+
+    return(<div className='audio'>
+      <audio ref={this.audioref} autoPlay id ="music_player" muted={this.state.no_muted}
+      
+      controls onEnded={this.playlist_ctrl}
+      src={myquest.music[this.state.track]}/>
+      <button onClick={this.play_pause}>|| </button>
+      <button onClick={this.mute_unmute}> 🔇</button>
+      </div>)
+  }
+  mute_unmute(handler)//{}
+  {let buff=!this.state.no_muted;this.setState({no_muted:buff})}
+  play_pause(handler)
+  {
+    //console.log(handler.target)
+    let buff=!this.state.playing;this.setState({playing:buff})
+    console.log(this.audioref.current)
+  if(this.state.playing){ this.audioref.current.play()}
+  else{this.audioref.current.pause()}      
+  }
+  playlist_ctrl(handler)
+  {
+    //alert("ended")
+    let trn_buffer=this.state.track+1
+   if(trn_buffer<myquest.music.length)
+    this.setState({track:trn_buffer})
+   else
+    this.setState({track:0})
+    
   }
 }
 
+class PicFrame extends React.Component
+{
+  constructor()
+  {
+    super()
+    this.props={source:"",isvideo:false}
+    this.state={img:"",isvid:false}
+    
+  }
+  render()
+  {
+    if(isvid){return(<div className='image_store'><video muted autoPlay loop
+     src={this.state.img}/></div>)}
+    else{return(<div className='image_store'><img src={this.state.img}/></div>)}
+  }
+}
 
 export default App;
