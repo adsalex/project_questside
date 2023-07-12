@@ -1,8 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-
+var vid_ext=[]
+var img_ext=[]
 var myquest={
+  style:{},
   music:["sr2.mp4","human.mp4"],
   "variables":
   {
@@ -13,7 +15,7 @@ var myquest={
   "rooms":
   {
       "main_room":
-      {"text":"вы в гостинной сейчас стоите","image":"/logo192.png",
+      {"text":"вы в гостинной сейчас стоите","image":"/human.mp4",isvid:1,
       "options":[
           {"text":"перейти на кухню","move":"kitchen","mathf":{va:"<$ins>room",vb:"33",operator:"+"}
           /* "change":{cell:"room",value:"22"} */},
@@ -81,7 +83,8 @@ class Quest_Table extends React.Component
 render()
 {
   return (<div id='quest_app'>
-    <img id='photo' alt='no phot' src={myquest.rooms[this.state.current_room].image}></img>
+    <PicFrame source={myquest.rooms[this.state.current_room].image} 
+    isvideo={myquest.rooms[this.state.current_room].isvid}/>
     <div id='vars_text'>{wrapper(myquest.variables.visible) }</div>
     <div id='text_table'>{myquest.rooms[this.state.current_room]["text"]} </div>
     <div id='option_bar'>
@@ -91,6 +94,7 @@ render()
     </div>
     <Audio_player/>
     </div>
+    
   )
 }
 
@@ -298,20 +302,23 @@ class Audio_player extends React.Component
   }
 }
 
+Quest_Table.prototype.concat=function()
+{
+
+}
+
 class PicFrame extends React.Component
 {
   constructor()
   {
     super()
     this.props={source:"",isvideo:false}
-    this.state={img:"",isvid:false}
-    
   }
   render()
   {
-    if(isvid){return(<div className='image_store'><video muted autoPlay loop
-     src={this.state.img}/></div>)}
-    else{return(<div className='image_store'><img src={this.state.img}/></div>)}
+    if(this.props.isvideo){return(<div className='image_store'><video muted autoPlay loop
+     src={this.props.source}/></div>)}
+    else{return(<div className='image_store'><img alt='noph' src={this.props.source}/></div>)}
   }
 }
 
