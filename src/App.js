@@ -3,6 +3,7 @@ import './App.css';
 import React from 'react';
 var vid_ext=[]
 var img_ext=[]
+
 var myquest={
   style:{},
   music:["sr2.mp4","human.mp4"],
@@ -15,9 +16,9 @@ var myquest={
   "rooms":
   {
       "main_room":
-      {"text":"вы в гостинной сейчас стоите","image":"/human.mp4",isvid:1,
+      {"text":"вы в гостинной сейчас стоите <$ins>room<$ins> <$ins>room<$ins>","image":"/human.mp4",isvid:0,
       "options":[
-          {"text":"перейти на кухню","move":"kitchen","mathf":{va:"<$ins>room",vb:"33",operator:"+"}
+          {"text":"перейти на кухню","move":"kitchen","stringf":{va:"<$ins>room",vb:"33",operator:"+"}
           /* "change":{cell:"room",value:"22"} */},
           {"text":"перейти в ванную", 
           ifsw:{a_val:"<$ins>room",b_val:"22", operator:"=",
@@ -82,11 +83,31 @@ class Quest_Table extends React.Component
   }
 render()
 {
+  //const ins_regex=/<\$ins>(.*)<\$ins>/gi
+  const capture_regex=/<\$ins>(.*?)<\$ins>/gi
+
+  
+  let textbuffer=myquest.rooms[this.state.current_room]["text"]
+  let matchbuff=[...textbuffer.matchAll(capture_regex)]
+  //console.log(matchbuff,textbuffer.matchAll(capture_regex))
+  //matchbuff.shift()
+  //let arr=[(...matchbuff)]
+   //matchbuff.ForEach((key)=> 
+  for(let key of matchbuff){
+  console.log(key[1])
+  const ins_regex=new RegExp(`<\\$ins>${key[1]}<\\$ins>`,"gi");
+  console.log(ins_regex.test("<$ins>room<$ins>"),ins_regex,myquest.variables.visible[key[1]])
+  console.log(textbuffer.replace(ins_regex,myquest.variables.visible[key[1]])) 
+  textbuffer= textbuffer.replace(ins_regex,myquest.variables.visible[key[1]])}
+  
+  //while(textbuffer.match(ins_regex))
+  //{textbuffer.replace(ins_regex,myquest.variables.visible['$1'])}
+
   return (<div id='quest_app'>
     <PicFrame source={myquest.rooms[this.state.current_room].image} 
     isvideo={myquest.rooms[this.state.current_room].isvid}/>
     <div id='vars_text'>{wrapper(myquest.variables.visible) }</div>
-    <div id='text_table'>{myquest.rooms[this.state.current_room]["text"]} </div>
+    <div id='text_table'>{textbuffer/* myquest.rooms[this.state.current_room]["text"] */} </div>
     <div id='option_bar'>
     <Quest_Options options={myquest.rooms[this.state.current_room]["options"]}
     room={this.state.current_room}
@@ -193,6 +214,11 @@ post_transit(trans_map)
     console.log(333)
     this.math_func(trans_map.mathf)
   }
+  if(trans_map.stringf)
+  {
+    console.log(333)
+    this.string_work(trans_map.stringf)
+  }
   if(trans_map.move)
   {
   this.setState({current_room:trans_map.move})
@@ -218,6 +244,32 @@ else
 this.post_transit(commandbuff)
 }
 }
+
+string_work(string_obj)
+{
+  let buffer
+  let varname_buff_a=null//this.cut_var(oper_obj.va)
+  if(typeof string_obj.va =="string")
+  {varname_buff_a=(string_obj.va.replace("<$ins>","")) }
+  string_obj.va=(this.get_var(string_obj.va))
+  string_obj.vb=(this.get_var(string_obj.vb))
+switch(string_obj.operator)
+{
+  case "+":{buffer=string_obj.va.concat(string_obj.vb);break}
+  case "*":{buffer=string_obj.va.repeat(string_obj.vb);break}
+  case "includes":{buffer=string_obj.va.includes(string_obj.vb);break}
+  case "replace":{buffer=string_obj.va.replace(string_obj.vb,string_obj.vc);break}
+}
+if(string_obj.write_to){
+  myquest.variables.visible[string_obj.write_to]=buffer
+  }
+  else
+  {
+  if(varname_buff_a){myquest.variables.visible[varname_buff_a]=buffer}
+  }
+
+}
+
 }
 
 class Quest_Options extends React.Component
@@ -316,7 +368,13 @@ class PicFrame extends React.Component
   }
   render()
   {
-    if(this.props.isvideo){return(<div className='image_store'><video muted autoPlay loop
+    let novid=false
+    const img_array=["BMP", "GIF", "JPG", "JPEG", "PNG", "WebP","SVG"]
+    for(const ext of img_array)
+    {
+      if(this.props.source.toUpperCase().includes(ext)){novid=true;break}
+    }
+    if(!novid){return(<div className='image_store'><video muted autoPlay loop
      src={this.props.source}/></div>)}
     else{return(<div className='image_store'><img alt='noph' src={this.props.source}/></div>)}
   }
