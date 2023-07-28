@@ -5,18 +5,21 @@ var vid_ext=[]
 var img_ext=[]
 
 var myquest={
-  style:{},
+  style:
+  {
+
+  },
   music:["sr2.mp4","human.mp4"],
   "variables":
   {
-      "visible":{"room":"22"},
+      "visible":{"room":"<$ins>room<$ins>22","kll":"33"},
       "hidden":{}
   },
   "start_from":"main_room",
   "rooms":
   {
       "main_room":
-      {"text":"вы в гостинной сейчас стоите <$ins>room<$ins> <$ins>room<$ins>","image":"/human.mp4",isvid:0,
+      {"text":"вы в гостинной сейчас стоите <$ins>kll<$ins> <$ins>room<$ins>","image":"/human.mp4",isvid:0,
       "options":[
           {"text":"перейти на кухню","move":"kitchen","stringf":{va:"<$ins>room",vb:"33",operator:"+"}
           /* "change":{cell:"room",value:"22"} */},
@@ -66,7 +69,7 @@ var myquest={
 
 function App() {
   return (
-    <Quest_Table/>
+    <Quest_Table max_recursor={1} trim={1}/>
   );
 }
 
@@ -75,6 +78,7 @@ class Quest_Table extends React.Component
   constructor()
   {
     super()
+    this.props ={max_recursor:3}
     this.state = {color: "red",current_room:myquest.start_from};
     this.transit=this.transit.bind(this)
     this.post_transit=this.post_transit.bind(this)
@@ -83,30 +87,12 @@ class Quest_Table extends React.Component
   }
 render()
 {
-  //const ins_regex=/<\$ins>(.*)<\$ins>/gi
-  const capture_regex=/<\$ins>(.*?)<\$ins>/gi
-
+  const textbuffer=this.instex(myquest.rooms[this.state.current_room]["text"])
   
-  let textbuffer=myquest.rooms[this.state.current_room]["text"]
-  let matchbuff=[...textbuffer.matchAll(capture_regex)]
-  //console.log(matchbuff,textbuffer.matchAll(capture_regex))
-  //matchbuff.shift()
-  //let arr=[(...matchbuff)]
-   //matchbuff.ForEach((key)=> 
-  for(let key of matchbuff){
-  console.log(key[1])
-  const ins_regex=new RegExp(`<\\$ins>${key[1]}<\\$ins>`,"gi");
-  console.log(ins_regex.test("<$ins>room<$ins>"),ins_regex,myquest.variables.visible[key[1]])
-  console.log(textbuffer.replace(ins_regex,myquest.variables.visible[key[1]])) 
-  textbuffer= textbuffer.replace(ins_regex,myquest.variables.visible[key[1]])}
-  
-  //while(textbuffer.match(ins_regex))
-  //{textbuffer.replace(ins_regex,myquest.variables.visible['$1'])}
-
   return (<div id='quest_app'>
     <PicFrame source={myquest.rooms[this.state.current_room].image} 
     isvideo={myquest.rooms[this.state.current_room].isvid}/>
-    <div id='vars_text'>{wrapper(myquest.variables.visible) }</div>
+   {/*  <div id='vars_text'>{wrapper(myquest.variables.visible) }</div> */}
     <div id='text_table'>{textbuffer/* myquest.rooms[this.state.current_room]["text"] */} </div>
     <div id='option_bar'>
     <Quest_Options options={myquest.rooms[this.state.current_room]["options"]}
@@ -117,6 +103,32 @@ render()
     </div>
     
   )
+}
+
+instex(replaceble)
+{
+  const capture_regex=/<\$ins>(.*?)<\$ins>/gi
+  let recursor = 0
+  
+    //let replaceble=myquest.rooms[this.state.current_room]["text"]
+    while(replaceble.match(capture_regex) && recursor<this.props.max_recursor){ 
+    const matchbuff=[...replaceble.matchAll(capture_regex)]
+    console.log(recursor,this.props.max_recursor)
+    for(const key of matchbuff){
+    //console.log("key[1]"+recursor)
+    const ins_regex=new RegExp(`<\\$ins>${key[1]}<\\$ins>`,"gi");
+    //console.log(ins_regex.test("<$ins>room<$ins>"),ins_regex,myquest.variables.visible[key[1]])
+    //console.log(replaceble.replace(ins_regex,myquest.variables.visible[key[1]])) 
+    replaceble= replaceble.replace(ins_regex,myquest.variables.visible[key[1]])}
+    
+    recursor++
+      
+  }
+  if(this.props.trim)
+  {
+    replaceble=replaceble.replace(capture_regex,"")
+  }
+  return replaceble
 }
 
 qswitch_f(switch_obj)
