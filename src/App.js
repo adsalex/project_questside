@@ -12,7 +12,7 @@ var myquest={
   music:["sr2.mp4","human.mp4"],
   "variables":
   {
-      "visible":{"room":"<$ins>room<$ins>22","kll":"33"},
+      "visible":{"room":"22","kll":"33"},
       "hidden":{}
   },
   "start_from":"main_room",
@@ -21,14 +21,14 @@ var myquest={
       "main_room":
       {"text":"вы в гостинной сейчас стоите <$ins>kll<$ins> <$ins>room<$ins>","image":"/human.mp4",isvid:0,
       "options":[
-          {"text":"перейти на кухню","move":"kitchen","stringf":{va:"<$ins>room",vb:"33",operator:"+"}
+          {"text":"перейти на кухню","move":"kitchen","stringf":[{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"},{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"}]
           /* "change":{cell:"room",value:"22"} */},
           {"text":"перейти в ванную", 
           ifsw:{a_val:"<$ins>room",b_val:"22", operator:"=",
-            then:{"move":"balcony","change":{cell:"room",value:"kithcen 453"}},
-            qelse:{"move":"balcony","change":{cell:"room",value:"kithcen 333"}}
+            then:{"move":"balcony","change":[{cell:"room",value:"kithcen 453"},{cell:"kll",value:"kithcen 453"}]},
+            qelse:{"move":"balcony","change":[{cell:"room",value:"kithcen 333"}]}
           },
-          "move":"balcony","change":{cell:"room",value:"kithcen 333"} },
+          "move":"balcony","change":[{cell:"room",value:"kithcen 333"}] },
           
           {"text":"перейти в спальню",
             qswitch:{
@@ -152,26 +152,30 @@ qswitch_f(switch_obj)
 
 math_func(oper_obj)
 {
-let varname_buff_a=null//this.cut_var(oper_obj.va)
-if(typeof oper_obj.va =="string")
-{varname_buff_a=(oper_obj.va.replace("<$ins>","")) }
+let arr_iter=oper_obj.length
+if(Array.isArray(oper_obj)){}
+//else{}
+for(let it_counter=0; it_counter<arr_iter;it_counter++){
+let varname_buff_a=null//this.cut_var(oper_obj[it_counter].va)
+if(typeof oper_obj[it_counter].va =="string")
+{varname_buff_a=(oper_obj[it_counter].va.replace("<$ins>","")) }
 
-console.log(oper_obj,"im hungry",varname_buff_a)
-oper_obj.va=Number(this.get_var(oper_obj.va))
-oper_obj.vb=Number(this.get_var(oper_obj.vb))
+console.log(oper_obj[it_counter],"im hungry",varname_buff_a)
+oper_obj[it_counter].va=Number(this.get_var(oper_obj[it_counter].va))
+oper_obj[it_counter].vb=Number(this.get_var(oper_obj[it_counter].vb))
 let buffer=0
-switch(oper_obj.operator)
+switch(oper_obj[it_counter].operator)
 {
-case "+":{buffer=oper_obj.va+oper_obj.vb;break}
-case "-":{buffer=oper_obj.va-oper_obj.vb;break}
-case "/":{buffer=oper_obj.va/oper_obj.vb;break}
-case "*":{buffer=oper_obj.va*oper_obj.vb;break}
-case "^":{buffer=oper_obj.va**oper_obj.vb;break}
-case "ln":{ buffer=Math.log(oper_obj.va);break}
-case "log":{ buffer=Math.log(oper_obj.va)/Math.log(oper_obj.vb);break}
+case "+":{buffer=oper_obj[it_counter].va+oper_obj[it_counter].vb;break}
+case "-":{buffer=oper_obj[it_counter].va-oper_obj[it_counter].vb;break}
+case "/":{buffer=oper_obj[it_counter].va/oper_obj[it_counter].vb;break}
+case "*":{buffer=oper_obj[it_counter].va*oper_obj[it_counter].vb;break}
+case "^":{buffer=oper_obj[it_counter].va**oper_obj[it_counter].vb;break}
+case "ln":{ buffer=Math.log(oper_obj[it_counter].va);break}
+case "log":{ buffer=Math.log(oper_obj[it_counter].va)/Math.log(oper_obj[it_counter].vb);break}
 }
-if(oper_obj.write_to){
-myquest.variables.visible[oper_obj.write_to]=buffer
+if(oper_obj[it_counter].write_to){
+myquest.variables.visible[oper_obj[it_counter].write_to]=buffer
 }
 else
 {
@@ -179,7 +183,7 @@ if(varname_buff_a){myquest.variables.visible[varname_buff_a]=buffer}
 }
 
 }
-
+}
 
 get_var(forcheck)
 {
@@ -202,9 +206,14 @@ ifswitch(switch_obj)
 
   switch(switch_obj.operator)
   {
-    case "=" :{if(switch_obj.a_val==switch_obj.b_val){choise=true};break}
-    case "<" :{if(switch_obj.a_val<switch_obj.b_val){choise=true};break}
-    case ">" :{if(switch_obj.a_val>switch_obj.b_val){choise=true};break}
+    //case "=" :{if(switch_obj.a_val==switch_obj.b_val){choise=true};break}
+    case "=" :{choise=switch_obj.a_val==switch_obj.b_val;break}
+    //case "<" :{if(switch_obj.a_val<switch_obj.b_val){choise=true};break}
+    case "<" :{choise=switch_obj.a_val<switch_obj.b_val;break}
+    //case ">" :{if(switch_obj.a_val>switch_obj.b_val){choise=true};break}
+    case ">" :{choise=switch_obj.a_val>switch_obj.b_val;break}
+    //case "!=" :{if(switch_obj.a_val!=switch_obj.b_val){choise=true};break}
+    case "!=" :{choise=switch_obj.a_val==switch_obj.b_val;break}
   }
   console.log(switch_obj.a_val,switch_obj.b_val)
   if(choise)
@@ -219,7 +228,11 @@ post_transit(trans_map)
   console.log(trans_map)
   if(trans_map.change)
   {
-  myquest.variables.visible[trans_map.change.cell]=trans_map.change.value
+  let ch_items=trans_map.change.length
+  for(let iter_ch=0;iter_ch<ch_items;iter_ch++)
+  {
+  myquest.variables.visible[trans_map.change[iter_ch].cell]=trans_map.change[iter_ch].value
+  }
   }
   if(trans_map.mathf)
   {
@@ -235,11 +248,13 @@ post_transit(trans_map)
   {
   this.setState({current_room:trans_map.move})
   }
-  console.log(myquest)
+  //else{this.transit(trans_map)} //need to test
+  console.log(myquest.variables.visible)
 }
 
 transit(handler,index,room)
 { 
+console.log(myquest.rooms[room].options[index],index)
 let commandbuff=myquest.rooms[room].options[index]
 
 if(commandbuff.qswitch)
@@ -259,29 +274,32 @@ this.post_transit(commandbuff)
 
 string_work(string_obj)
 {
-  let buffer
-  let varname_buff_a=null//this.cut_var(oper_obj.va)
-  if(typeof string_obj.va =="string")
-  {varname_buff_a=(string_obj.va.replace("<$ins>","")) }
-  string_obj.va=(this.get_var(string_obj.va))
-  string_obj.vb=(this.get_var(string_obj.vb))
-switch(string_obj.operator)
+  let swork_arr=string_obj.length
+console.log(string_obj)
+  for(let st_counter=0;st_counter<swork_arr;st_counter++){ let buffer
+  let varname_buff_a=null//this.cut_var(oper_obj[it_counter].va)
+  if(typeof string_obj[st_counter].va =="string")
+  {varname_buff_a=(string_obj[st_counter].va.replace("<$ins>","")) }
+  string_obj[st_counter].va=(this.get_var(string_obj[st_counter].va))
+  string_obj[st_counter].vb=(this.get_var(string_obj[st_counter].vb))
+  console.log(string_obj[st_counter].va)
+  switch(string_obj[st_counter].operator)
 {
-  case "+":{buffer=string_obj.va.concat(string_obj.vb);break}
-  case "*":{buffer=string_obj.va.repeat(string_obj.vb);break}
-  case "includes":{buffer=string_obj.va.includes(string_obj.vb);break}
-  case "replace":{buffer=string_obj.va.replace(string_obj.vb,string_obj.vc);break}
-}
-if(string_obj.write_to){
-  myquest.variables.visible[string_obj.write_to]=buffer
+  case "+":{buffer=string_obj[st_counter].va.concat(string_obj[st_counter].vb);break}
+  case "*":{buffer=string_obj[st_counter].va.repeat(string_obj[st_counter].vb);break}
+  case "includes":{buffer=string_obj[st_counter].va.includes(string_obj[st_counter].vb);break}
+  case "replace":{buffer=string_obj[st_counter].va.replace(string_obj[st_counter].vb,string_obj[st_counter].vc);break}
+} console.log(buffer)
+if(string_obj[st_counter].write_to){
+  myquest.variables.visible[string_obj[st_counter].write_to]=buffer
   }
   else
   {
-  if(varname_buff_a){myquest.variables.visible[varname_buff_a]=buffer}
+  if(varname_buff_a){myquest.variables.visible[varname_buff_a]=buffer;console.log(buffer)}
   }
 
 }
-
+}
 }
 
 class Quest_Options extends React.Component
@@ -332,12 +350,8 @@ class Audio_player extends React.Component
   }
   render()
   {
-    //let audio = new Audio('sr2.mp4');
-    
-
     return(<div className='audio'>
       <audio ref={this.audioref} autoPlay id ="music_player" muted={this.state.no_muted}
-      
       controls onEnded={this.playlist_ctrl}
       src={myquest.music[this.state.track]}/>
       <button onClick={this.play_pause}>|| </button>
