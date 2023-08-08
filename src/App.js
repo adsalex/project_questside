@@ -24,20 +24,36 @@ var myquest={
           {"text":"перейти на кухню","move":"kitchen","stringf":[{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"},{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"}]
           /* "change":{cell:"room",value:"22"} */},
           {"text":"перейти в ванную", 
-          ifsw:{a_val:"<$ins>room",b_val:"22", operator:"=",
+          ifsw:[{a_val:"<$ins>room",b_val:"22", operator:"=",
             then:{"move":"balcony","change":[{cell:"room",value:"kithcen 453"},{cell:"kll",value:"kithcen 453"}]},
             qelse:{"move":"balcony","change":[{cell:"room",value:"kithcen 333"}]}
           },
+          {a_val:"<$ins>room",b_val:"33", operator:"=",
+          then:{"move":"balcony","change":[{cell:"room",value:"kithcen 555"},{cell:"kll",value:"kithcen 453"}]},
+          qelse:{"move":"balcony","change":[{cell:"room",value:"kithcen 778"}]}
+          }
+        ],
           "move":"balcony","change":[{cell:"room",value:"kithcen 333"}] },
           
           {"text":"перейти в спальню",
-            qswitch:{
+            qswitch:[
+            {
               cell:"room",
               cases:{
                 "22":{"move":"kitchen","change":{cell:"room",value:"swi223399"}},
                 "33":{"move":"kitchen","change":{cell:"room",value:"sih 33uu77"}},
                 "44":{"move":"kitchen","change":{cell:"room",value:"sw 889hgfgg"}}},
-              qdefault:{"move":"kitchen","change":{cell:"room",value:"default vcase"}}}
+              qdefault:{"move":"kitchen","change":{cell:"room",value:"default vcase"}}
+            },
+            {
+              cell:"room",
+              cases:{
+                "22":{"move":"kitchen","change":{cell:"room",value:"swi223399"}},
+                "33":{"move":"kitchen","change":{cell:"room",value:"sih 33uu77"}},
+                "44":{"move":"kitchen","change":{cell:"room",value:"sw 889hgfgg"}}},
+              qdefault:{"move":"kitchen","change":{cell:"room",value:"default vcase"}}
+            }
+          ]
           }
      ]},
       "kitchen":
@@ -115,10 +131,7 @@ instex(replaceble)
     const matchbuff=[...replaceble.matchAll(capture_regex)]
     console.log(recursor,this.props.max_recursor)
     for(const key of matchbuff){
-    //console.log("key[1]"+recursor)
     const ins_regex=new RegExp(`<\\$ins>${key[1]}<\\$ins>`,"gi");
-    //console.log(ins_regex.test("<$ins>room<$ins>"),ins_regex,myquest.variables.visible[key[1]])
-    //console.log(replaceble.replace(ins_regex,myquest.variables.visible[key[1]])) 
     replaceble= replaceble.replace(ins_regex,myquest.variables.visible[key[1]])}
     
     recursor++
@@ -133,21 +146,18 @@ instex(replaceble)
 
 qswitch_f(switch_obj)
 {
-  let choise =switch_obj.cases[myquest.variables.visible[switch_obj.cell]]
-  
-  console.log(switch_obj)
+  for(let sw_obj in switch_obj){
+  let choise =switch_obj[sw_obj].cases[myquest.variables.visible[switch_obj[sw_obj].cell]] 
+  console.log(switch_obj[sw_obj])
   if(!choise)
   {
-    //alert(switch_obj.qdefault)
-    this.post_transit(switch_obj.qdefault)
-    
+    this.post_transit(switch_obj[sw_obj].qdefault)
   }
   else
   {
-    //alert(switch_obj.cases[myquest.variables.visible[switch_obj.cell]])
-    this.post_transit(switch_obj.cases[myquest.variables.visible[switch_obj.cell]])
+    this.post_transit(switch_obj[sw_obj].cases[myquest.variables.visible[switch_obj[sw_obj].cell]])
   }
-
+  }
 }
 
 math_func(oper_obj)
@@ -197,30 +207,32 @@ get_var(forcheck)
 
 ifswitch(switch_obj)
 {
+  for(const if_obj in switch_obj){
   let choise =false
   
-  console.log(switch_obj.a_val,switch_obj.b_val)
+  console.log(switch_obj[if_obj].a_val,switch_obj[if_obj].b_val)
   
-  switch_obj.a_val=this.get_var(switch_obj.a_val)
-  switch_obj.b_val=this.get_var(switch_obj.b_val)
+  switch_obj[if_obj].a_val=this.get_var(switch_obj[if_obj].a_val)
+  switch_obj[if_obj].b_val=this.get_var(switch_obj[if_obj].b_val)
 
-  switch(switch_obj.operator)
+  switch(switch_obj[if_obj].operator)
   {
-    //case "=" :{if(switch_obj.a_val==switch_obj.b_val){choise=true};break}
-    case "=" :{choise=switch_obj.a_val==switch_obj.b_val;break}
-    //case "<" :{if(switch_obj.a_val<switch_obj.b_val){choise=true};break}
-    case "<" :{choise=switch_obj.a_val<switch_obj.b_val;break}
-    //case ">" :{if(switch_obj.a_val>switch_obj.b_val){choise=true};break}
-    case ">" :{choise=switch_obj.a_val>switch_obj.b_val;break}
-    //case "!=" :{if(switch_obj.a_val!=switch_obj.b_val){choise=true};break}
-    case "!=" :{choise=switch_obj.a_val==switch_obj.b_val;break}
+    //case "=" :{if(switch_obj[if_obj].a_val==switch_obj[if_obj].b_val){choise=true};break}
+    case "=" :{choise=switch_obj[if_obj].a_val==switch_obj[if_obj].b_val;break}
+    //case "<" :{if(switch_obj[if_obj].a_val<switch_obj[if_obj].b_val){choise=true};break}
+    case "<" :{choise=switch_obj[if_obj].a_val<switch_obj[if_obj].b_val;break}
+    //case ">" :{if(switch_obj[if_obj].a_val>switch_obj[if_obj].b_val){choise=true};break}
+    case ">" :{choise=switch_obj[if_obj].a_val>switch_obj[if_obj].b_val;break}
+    //case "!=" :{if(switch_obj[if_obj].a_val!=switch_obj[if_obj].b_val){choise=true};break}
+    case "!=" :{choise=switch_obj[if_obj].a_val==switch_obj[if_obj].b_val;break}
   }
-  console.log(switch_obj.a_val,switch_obj.b_val)
+  console.log(switch_obj[if_obj].a_val,switch_obj[if_obj].b_val)
   if(choise)
   {
-    this.post_transit(switch_obj.then)
+    this.post_transit(switch_obj[if_obj].then)
   }
-  else{this.post_transit(switch_obj.qelse)}
+  else{this.post_transit(switch_obj[if_obj].qelse)}
+}
 }
 
 post_transit(trans_map)
@@ -248,20 +260,38 @@ post_transit(trans_map)
   {
   this.setState({current_room:trans_map.move})
   }
-  //else{this.transit(trans_map)} //need to test
+  //else{this.transit_loop(trans_map)} //need to test
   console.log(myquest.variables.visible)
+}
+
+transit_loop(trans_obj)
+{ 
+
+if(trans_obj.qswitch)
+{
+  this.qswitch_f(trans_obj.qswitch)
+}
+
+if(trans_obj.ifsw)
+{
+  this.ifswitch(trans_obj.ifsw)  
+}
+else
+{
+this.post_transit(trans_obj)
+}
 }
 
 transit(handler,index,room)
 { 
-console.log(myquest.rooms[room].options[index],index)
+//console.log(myquest.rooms[room].options[index],index)
 let commandbuff=myquest.rooms[room].options[index]
-
+//if(trans_obj){commandbuff=trans_obj}
+//else{commandbuff=myquest.rooms[room].options[index]}
 if(commandbuff.qswitch)
 {
   this.qswitch_f(commandbuff.qswitch)
 }
-
 if(commandbuff.ifsw)
 {
   this.ifswitch(commandbuff.ifsw)  
