@@ -32,7 +32,7 @@ var myquest={
           then:
           {
             ifsw:[{a_val:"<$ins>room",b_val:"22", operator:"=",
-            then:{"move":"balcony","change":[{cell:"kick",value:"kithcen 9990"},{cell:"kll",value:"kithcen 453"}]},
+            then:{"move":"main_room","change":[{cell:"kick",value:"kithcen 9990"},{cell:"kll",value:"kithcen 453"}]},
             qelse:{"move":"balcony","change":[{cell:"kick",value:"kithcen 99977"}]}}]
           },
           qelse:{"move":"balcony","change":[{cell:"room",value:"kithcen 778"}]}
@@ -292,10 +292,7 @@ this.post_transit(trans_obj)
 
 transit(handler,index,room)
 { 
-//console.log(myquest.rooms[room].options[index],index)
 let commandbuff=myquest.rooms[room].options[index]
-//if(trans_obj){commandbuff=trans_obj}
-//else{commandbuff=myquest.rooms[room].options[index]}
 if(commandbuff.qswitch)
 {
   this.qswitch_f(commandbuff.qswitch)
