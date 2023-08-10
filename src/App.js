@@ -25,11 +25,16 @@ var myquest={
           /* "change":{cell:"room",value:"22"} */},
           {"text":"перейти в ванную", 
           ifsw:[{a_val:"<$ins>room",b_val:"22", operator:"=",
-            then:{"move":"balcony","change":[{cell:"room",value:"kithcen 453"},{cell:"kll",value:"kithcen 453"}]},
-            qelse:{"move":"balcony","change":[{cell:"room",value:"kithcen 333"}]}
+            then:{"move":"balcony","change":[{cell:"room",value:"22"},{cell:"kll",value:"kithcen 453"}]},
+            qelse:{"move":"balcony","change":[{cell:"room",value:"22"}]}
           },
-          {a_val:"<$ins>room",b_val:"33", operator:"=",
-          then:{"move":"balcony","change":[{cell:"room",value:"kithcen 555"},{cell:"kll",value:"kithcen 453"}]},
+          {a_val:"<$ins>room",b_val:"22", operator:"=",
+          then:
+          {
+            ifsw:[{a_val:"<$ins>room",b_val:"22", operator:"=",
+            then:{"move":"balcony","change":[{cell:"kick",value:"kithcen 9990"},{cell:"kll",value:"kithcen 453"}]},
+            qelse:{"move":"balcony","change":[{cell:"kick",value:"kithcen 99977"}]}}]
+          },
           qelse:{"move":"balcony","change":[{cell:"room",value:"kithcen 778"}]}
           }
         ],
@@ -197,7 +202,6 @@ if(varname_buff_a){myquest.variables.visible[varname_buff_a]=buffer}
 
 get_var(forcheck)
 {
-  //let forcheck=new String
   if(typeof forcheck==="string"&&forcheck.includes("<$ins>"))
   {
     return(myquest.variables.visible[forcheck.replace("<$ins>","")])
@@ -217,13 +221,9 @@ ifswitch(switch_obj)
 
   switch(switch_obj[if_obj].operator)
   {
-    //case "=" :{if(switch_obj[if_obj].a_val==switch_obj[if_obj].b_val){choise=true};break}
     case "=" :{choise=switch_obj[if_obj].a_val==switch_obj[if_obj].b_val;break}
-    //case "<" :{if(switch_obj[if_obj].a_val<switch_obj[if_obj].b_val){choise=true};break}
     case "<" :{choise=switch_obj[if_obj].a_val<switch_obj[if_obj].b_val;break}
-    //case ">" :{if(switch_obj[if_obj].a_val>switch_obj[if_obj].b_val){choise=true};break}
     case ">" :{choise=switch_obj[if_obj].a_val>switch_obj[if_obj].b_val;break}
-    //case "!=" :{if(switch_obj[if_obj].a_val!=switch_obj[if_obj].b_val){choise=true};break}
     case "!=" :{choise=switch_obj[if_obj].a_val==switch_obj[if_obj].b_val;break}
   }
   console.log(switch_obj[if_obj].a_val,switch_obj[if_obj].b_val)
@@ -260,7 +260,15 @@ post_transit(trans_map)
   {
   this.setState({current_room:trans_map.move})
   }
-  //else{this.transit_loop(trans_map)} //need to test
+  else{ if(trans_map.ifsw)
+  {
+    this.ifswitch(trans_map.ifsw)
+  }
+  else if(trans_map.qswictch)
+  {
+    this.qswitch_f(trans_map.qswictch)
+  }
+}
   console.log(myquest.variables.visible)
 }
 
@@ -354,7 +362,7 @@ render()
 
 }}
 
-function wrapper(content, tag_class) {
+/* function wrapper(content, tag_class) {
   let buffer=[]
   for(let elem in content)
   {
@@ -365,7 +373,7 @@ function wrapper(content, tag_class) {
     buffer
   );
 }
-
+ */
 class Audio_player extends React.Component
 {
   constructor()
