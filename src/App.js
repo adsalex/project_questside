@@ -1,14 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
-var vid_ext=[]
-var img_ext=[]
+import React,{useState} from 'react';
+
 
 var myquest={
   style:
   {
 
   },
+  desсription:"Утро, обычный дом, и ничего интересного, только какой то человек пишет жизнь за вас "
+  ,
   music:["sr2.mp4","human.mp4"],
   "variables":
   {
@@ -89,16 +90,26 @@ var myquest={
 
 
 function App() {
-  return (
-    <Quest_Table max_recursor={1} trim={1}/>
-  );
+  const [game_menu,start_game]=React.useState(false)
+  const [pause_val,pause_func]=React.useState(false)
+
+  if(game_menu)
+  {
+    return (<Quest_Table unmuted={pause_val} max_recursor={1} trim={1}/>)  
+  }
+  else
+  {
+    return (<StartWindow description={myquest.desсription}
+       start_button={start_game}
+       pauser={pause_func} paused={pause_val}/>)
+  }
 }
 
 class Quest_Table extends React.Component
 {
-  constructor()
+  constructor(props)
   {
-    super()
+    super(props)
     this.props ={max_recursor:3}
     this.state = {color: "red",current_room:myquest.start_from};
     this.transit=this.transit.bind(this)
@@ -120,7 +131,7 @@ render()
     room={this.state.current_room}
     trans_f={this.transit}></Quest_Options>
     </div>
-    <Audio_player/>
+    <Audio_player paused={!this.props.unmuted}/>
     </div>
     
   )
@@ -339,9 +350,9 @@ if(string_obj[st_counter].write_to){
 
 class Quest_Options extends React.Component
 {
-  constructor()
+  constructor(props)
   {
-    super()
+    super(props)
     this.props = {options:{}}
     this.state = {color: "red"};
   }
@@ -373,11 +384,11 @@ render()
  */
 class Audio_player extends React.Component
 {
-  constructor()
+  constructor(props)
   {
-    super()
+    super(props)
     this.state={track:Math.round(Math.random()*(myquest.music.length-1)),
-    no_muted:1,playing:0}
+    muted:0,playing:0}
     this.mute_unmute=this.mute_unmute.bind(this)
     this.play_pause=this.play_pause.bind(this)
     this.playlist_ctrl=this.playlist_ctrl.bind(this)
@@ -386,7 +397,7 @@ class Audio_player extends React.Component
   render()
   {
     return(<div className='audio'>
-      <audio ref={this.audioref} autoPlay id ="music_player" muted={this.state.no_muted}
+      <audio ref={this.audioref} autoPlay={this.props.paused} id ="music_player" muted={this.state.muted}
       controls onEnded={this.playlist_ctrl}
       src={myquest.music[this.state.track]}/>
       <button onClick={this.play_pause}>|| </button>
@@ -394,12 +405,12 @@ class Audio_player extends React.Component
       </div>)
   }
   mute_unmute(handler)//{}
-  {let buff=!this.state.no_muted;this.setState({no_muted:buff})}
+  {let buff=!this.state.muted;this.setState({muted:buff})}
   play_pause(handler)
   {
     //console.log(handler.target)
     let buff=!this.state.playing;this.setState({playing:buff})
-    console.log(this.audioref.current)
+    
   if(this.state.playing){ this.audioref.current.play()}
   else{this.audioref.current.pause()}      
   }
@@ -415,16 +426,40 @@ class Audio_player extends React.Component
   }
 }
 
-Quest_Table.prototype.concat=function()
+/* Quest_Table.prototype.concat=function()
 {
 
+} */
+
+class StartWindow extends React.Component
+{
+  constructor(props)
+  {
+    super(props)
+    this.props={description:"Начать прохождение текстового квеста"}
+  }
+  render()
+  {
+    return(
+      <div>
+        <p>
+          {this.props.description}
+        </p>
+        <button onClick={this.props.start_button}> Начать </button>
+        <label htmlFor='start_sound'> Звук </label>
+        <input defaultChecked onClick={(handler)=>{this.props.pauser(!this.props.paused)}} id='start_sound' type='checkbox'></input> 
+      </div>
+    )
+  }
 }
+
+
 
 class PicFrame extends React.Component
 {
-  constructor()
+  constructor(props)
   {
-    super()
+    super(props)
     this.props={source:"",isvideo:false}
   }
   render()
