@@ -2,7 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react';
 
-
 var myquest={
   style:
   {
@@ -95,7 +94,7 @@ function App() {
 
   if(game_menu)
   {
-    return (<Quest_Table unmuted={pause_val} max_recursor={1} trim={1}/>)  
+    return (<Quest_Table unmuted={pause_val} />)  
   }
   else
   {
@@ -110,7 +109,7 @@ class Quest_Table extends React.Component
   constructor(props)
   {
     super(props)
-    this.props ={max_recursor:3}
+    this.props ={}
     this.state = {color: "red",current_room:myquest.start_from};
     this.transit=this.transit.bind(this)
     this.post_transit=this.post_transit.bind(this)
@@ -127,7 +126,7 @@ render()
    {/*  <div id='vars_text'>{wrapper(myquest.variables.visible) }</div> */}
     <div id='text_table'>{textbuffer/* myquest.rooms[this.state.current_room]["text"] */} </div>
     <div id='option_bar'>
-    <Quest_Options max_recursor={3} inserter={this.instex} options={myquest.rooms[this.state.current_room]["options"]}
+    <Quest_Options  inserter={this.instex} options={myquest.rooms[this.state.current_room]["options"]}
     room={this.state.current_room}
     trans_f={this.transit}></Quest_Options>
     </div>
@@ -371,18 +370,6 @@ render()
 
 }}
 
-/* function wrapper(content, tag_class) {
-  let buffer=[]
-  for(let elem in content)
-  {
-  buffer.push(<p className={tag_class}> <span>{content[elem]}</span></p>)
-  }
-  return (
-
-    buffer
-  );
-}
- */
 class Audio_player extends React.Component
 {
   constructor(props)
