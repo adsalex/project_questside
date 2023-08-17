@@ -63,7 +63,7 @@ var myquest={
           }
      ]},
       "kitchen":
-      {"text":"кухня, пахнет горелым","image":"",
+      {"text":"кухня, пахнет горелым","image":"logo192.png",
       "options":[
           {"text":"перейти в гостинную"},
           {"text":"перейти в ванную"},
@@ -398,7 +398,7 @@ class Audio_player extends React.Component
   {
     return(<div className='audio'>
       <audio ref={this.audioref} autoPlay={this.props.paused} id ="music_player" muted={this.state.muted}
-      controls onEnded={this.playlist_ctrl}
+       onEnded={this.playlist_ctrl}
       src={myquest.music[this.state.track]}/>
       <button onClick={this.play_pause}>|| </button>
       <button onClick={this.mute_unmute}> 🔇</button>
@@ -441,7 +441,7 @@ class StartWindow extends React.Component
   render()
   {
     return(
-      <div>
+      <div className='start_frame'>
         <p>
           {this.props.description}
         </p>
@@ -465,10 +465,13 @@ class PicFrame extends React.Component
   render()
   {
     let novid=false
-    const img_array=["BMP", "GIF", "JPG", "JPEG", "PNG", "WebP","SVG"]
+    
+    let file_split=this.props.source.split(".")
+    let file_ext=file_split[file_split.length-1].toLowerCase()
+    const img_array=["bmp", "gif", "jpg", "jpeg", "png", "webp","svg"]
     for(const ext of img_array)
     {
-      if(this.props.source.toUpperCase().includes(ext)){novid=true;break}
+      if(file_ext.includes(ext)){novid=true;break}
     }
     if(!novid){return(<div className='image_store'><video muted autoPlay loop
      src={this.props.source}/></div>)}
