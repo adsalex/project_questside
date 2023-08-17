@@ -24,7 +24,7 @@ var myquest={
       "options":[
           {"text":"перейти на кухню","move":"kitchen","stringf":[{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"},{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"}]
           /* "change":{cell:"room",value:"22"} */},
-          {"text":"перейти в ванную", 
+          {"text":"перейти в ванную <$ins>kll<$ins>", 
           ifsw:[{a_val:"<$ins>room",b_val:"22", operator:"=",
             then:{"move":"balcony","change":[{cell:"room",value:"22"},{cell:"kll",value:"kithcen 453"}]},
             qelse:{"move":"balcony","change":[{cell:"room",value:"22"}]}
@@ -127,7 +127,7 @@ render()
    {/*  <div id='vars_text'>{wrapper(myquest.variables.visible) }</div> */}
     <div id='text_table'>{textbuffer/* myquest.rooms[this.state.current_room]["text"] */} </div>
     <div id='option_bar'>
-    <Quest_Options options={myquest.rooms[this.state.current_room]["options"]}
+    <Quest_Options max_recursor={3} inserter={this.instex} options={myquest.rooms[this.state.current_room]["options"]}
     room={this.state.current_room}
     trans_f={this.transit}></Quest_Options>
     </div>
@@ -137,15 +137,14 @@ render()
   )
 }
 
-instex(replaceble)
+instex(replaceble,max_recursor=3,trim=1)
 {
   const capture_regex=/<\$ins>(.*?)<\$ins>/gi
   let recursor = 0
   
     //let replaceble=myquest.rooms[this.state.current_room]["text"]
-    while(replaceble.match(capture_regex) && recursor<this.props.max_recursor){ 
+    while(replaceble.match(capture_regex) && recursor<max_recursor){ 
     const matchbuff=[...replaceble.matchAll(capture_regex)]
-    console.log(recursor,this.props.max_recursor)
     for(const key of matchbuff){
     const ins_regex=new RegExp(`<\\$ins>${key[1]}<\\$ins>`,"gi");
     replaceble= replaceble.replace(ins_regex,myquest.variables.visible[key[1]])}
@@ -153,7 +152,7 @@ instex(replaceble)
     recursor++
       
   }
-  if(this.props.trim)
+  if(trim)
   {
     replaceble=replaceble.replace(capture_regex,"")
   }
@@ -363,7 +362,9 @@ render()
   for(let elem in this.props.options)
   {
     const constbuff =indcount
-    opt_buffer.push(<p > <span className="options" onClick={(handler)=>(this.props.trans_f(handler,constbuff,this.props.room))}>{this.props.options[elem].text}</span></p>)
+    opt_buffer.push(<p > <span className="options" 
+    onClick={(handler)=>(this.props.trans_f(handler,constbuff,this.props.room))}>
+    {this.props.inserter(this.props.options[elem].text)}</span></p>)
     indcount++
   }
   return opt_buffer
