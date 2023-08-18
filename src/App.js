@@ -140,8 +140,6 @@ instex(replaceble,max_recursor=3,trim=1)
 {
   const capture_regex=/<\$ins>(.*?)<\$ins>/gi
   let recursor = 0
-  
-    //let replaceble=myquest.rooms[this.state.current_room]["text"]
     while(replaceble.match(capture_regex) && recursor<max_recursor){ 
     const matchbuff=[...replaceble.matchAll(capture_regex)]
     for(const key of matchbuff){
