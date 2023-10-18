@@ -1,0 +1,54 @@
+
+@media (orientation:portrait),(max-width:800px)
+{
+    #quest_app{margin: 0;width: 100%;box-sizing: border-box;height: 100vh;background-color: rgb(206, 197, 186);}
+    .image_store{width: 100%;height: 35%;background-color: bisque;display: flex;box-sizing: border-box;justify-content: center;border: 4px black ridge;} 
+    .start_frame{margin: 2rem;}
+    .image_store>*{max-width: 100%;height: 100%;margin: auto;} 
+    .pause_button{height: 2rem;width: 2rem;margin: 0.3rem;}
+    .mute_button{height: 2rem;width: 2rem;margin: 0.3rem;}
+    
+    #storybox{height: 20%;margin: 0.5em;background-color: wheat;overflow: auto; text-indent: 2em;}
+    #option_bar{overflow-y: scroll;height: 30%;}
+
+    .quest_buttons{ width: 90%;padding: 0.3em;background-color: rgb(66, 66, 66);margin-left: 1.2rem;
+        font-style: oblique;color: white;text-indent: 1em;
+        box-shadow:  4px 4px 0 rgb(36, 35, 33)
+    }
+    .quest_buttons:active{
+        box-shadow:  none;
+        background-color: rgb(100, 100, 100);
+    }
+    .quest_buttons:hover{
+        background-color: rgb(90, 90, 90);
+    }
+    
+}
+#quest_app{color:black}
+.checkbox{filter: grayscale(100%);}
+
+@media (orientation:landscape) and (min-width:800px)
+{
+    
+    #quest_app{margin: auto;width: 100vh;height: 100vh;background-color: rgb(206, 197, 186);}
+    .image_store{width: 100%;box-sizing: border-box;height: 45%;background-color: bisque;display: flex;
+        justify-content: center;border: 4px black ridge;} 
+    .start_frame{margin: 2rem;}
+    .image_store>*{max-width: 100%;height: 100%;margin: auto;} 
+    .pause_button{/* position: fixed;top: 0;left: 0; */height: 2rem;width: 2rem;margin: 0.3rem;}
+    .mute_button{/* position: fixed;top: 0;left: 3em; */height: 2rem;width: 2rem;margin: 0.3rem;}
+    .quest_buttons{ width: 90%;padding: 0.3em;background-color: rgb(66, 66, 66);margin-left: 1.2rem;
+        font-style: oblique;color: white;text-indent: 1em;
+        box-shadow:  4px 4px 0 rgb(36, 35, 33)
+    }
+    .quest_buttons:active{
+        box-shadow:  none;
+        background-color: rgb(100, 100, 100);
+    }
+    .quest_buttons:hover{
+        background-color: rgb(90, 90, 90);
+    }
+    #storybox{height: 20%;margin: 0.5em;background-color: wheat;overflow: auto; text-indent: 2em;}
+    #option_bar{overflow-y: auto;height: 20%;background-color: rgb(240, 208, 161);border: 4px ridge gray;}
+    
+}

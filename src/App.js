@@ -1,7 +1,13 @@
 import logo from './logo.svg';
-import './App.css';
+//import './App.css';
 import React,{useState} from 'react';
-
+import {useNavigate} from 'react-router-dom'
+import main from"./main.module.css" 
+import Selector from './selector';
+import selstyle from "./selector.module.css"
+import { BrowserRouter, Route, Routes, json, useLocation } from 'react-router-dom';
+const mute_icon = "./Mute_Icon.svg"
+const pause_icon = "./pause.svg"
 var myquest={
   style:
   {
@@ -87,18 +93,47 @@ var myquest={
   }
 }
 
+function App()
+{
+  return (
+  <BrowserRouter>
+  <Routes>
+    <Route path='' element={<Selector/>}></Route>
+    <Route path='*' element={<Selector/>}></Route>
+    <Route path='game' element={<Routed_App/>}></Route>
+  </Routes>
+  </BrowserRouter>
+  )
+}
 
-function App() {
+function Routed_App() {
+  const [quest_resp,getQuest]=useState("")
+  const [questTrig,setTrig]=useState(true)
   const [game_menu,start_game]=React.useState(false)
   const [pause_val,pause_func]=React.useState(false)
-
+  let Location =useLocation().search
+  if(Location){Location =Location.substring(1)}// delete ?
+  console.log(Location)
+  if(questTrig){
+  let respon =  fetch("http://localhost:3300/load?q="+Location)
+    .then((response) => response.json())
+    .then((response) => {
+            console.log(response)
+            getQuest(response)
+            setTrig(false)//resp_dat =response//this.setState({isLoaded: true});
+    })
+  }
+  myquest = (quest_resp)
+  console.log(quest_resp)
   if(game_menu)
   {
+    //return(<Selector/>)
     return (<Quest_Table unmuted={pause_val} />)  
   }
   else
   {
-    return (<StartWindow description={myquest.desсription}
+    console.log(myquest.music)
+    return (<StartWindow description={myquest.description}
        start_button={start_game}
        pauser={pause_func} paused={pause_val}/>)
   }
@@ -120,12 +155,12 @@ render()
 {
   const textbuffer=this.instex(myquest.rooms[this.state.current_room]["text"])
   
-  return (<div id='quest_app'>
+  return (<div id={main.quest_app}>
     <PicFrame source={myquest.rooms[this.state.current_room].image} 
     isvideo={myquest.rooms[this.state.current_room].isvid}/>
    {/*  <div id='vars_text'>{wrapper(myquest.variables.visible) }</div> */}
-    <div id='text_table'>{textbuffer/* myquest.rooms[this.state.current_room]["text"] */} </div>
-    <div id='option_bar'>
+    <div id={main.storybox}>{textbuffer/* myquest.rooms[this.state.current_room]["text"] */} </div>
+    <div id={main.option_bar}>
     <Quest_Options  inserter={this.instex} options={myquest.rooms[this.state.current_room]["options"]}
     room={this.state.current_room}
     trans_f={this.transit}></Quest_Options>
@@ -359,9 +394,9 @@ render()
   for(let elem in this.props.options)
   {
     const constbuff =indcount
-    opt_buffer.push(<p > <span className="options" 
+    opt_buffer.push(<p className={main.quest_buttons}
     onClick={(handler)=>(this.props.trans_f(handler,constbuff,this.props.room))}>
-    {this.props.inserter(this.props.options[elem].text)}</span></p>)
+    {this.props.inserter(this.props.options[elem].text)}</p>)
     indcount++
   }
   return opt_buffer
@@ -386,8 +421,8 @@ class Audio_player extends React.Component
       <audio ref={this.audioref} autoPlay={this.props.paused} id ="music_player" muted={this.state.muted}
        onEnded={this.playlist_ctrl}
       src={myquest.music[this.state.track]}/>
-      <button onClick={this.play_pause}>|| </button>
-      <button onClick={this.mute_unmute}> 🔇</button>
+      <img onClick={this.play_pause}  src={pause_icon} className={main.pause_button}/> 
+      <img onClick={this.mute_unmute} src={mute_icon} className={main.mute_button}/> 
       </div>)
   }
   mute_unmute(handler)//{}
@@ -427,13 +462,16 @@ class StartWindow extends React.Component
   render()
   {
     return(
-      <div className='start_frame'>
+      <div className={selstyle.Selection_section}>
         <p>
           {this.props.description}
         </p>
-        <button onClick={this.props.start_button}> Начать </button>
-        <label htmlFor='start_sound'> Звук </label>
-        <input defaultChecked onClick={(handler)=>{this.props.pauser(!this.props.paused)}} id='start_sound' type='checkbox'></input> 
+        <button onClick={this.props.start_button} > Начать </button>
+        <p>
+        
+        <input className={main.checkbox} defaultChecked onClick={(handler)=>{this.props.pauser(!this.props.paused)}} id='start_sound' name='start_sound' type='checkbox'></input> 
+        <label htmlFor='start_sound'> Звук</label> 
+        </p>
       </div>
     )
   }
@@ -459,9 +497,9 @@ class PicFrame extends React.Component
     {
       if(file_ext.includes(ext)){novid=true;break}
     }
-    if(!novid){return(<div className='image_store'><video muted autoPlay loop
+    if(!novid){return(<div className={main.image_store}><video muted autoPlay loop
      src={this.props.source}/></div>)}
-    else{return(<div className='image_store'><img alt='noph' src={this.props.source}/></div>)}
+    else{return(<div className={main.image_store}><img alt='noph' src={this.props.source}/></div>)}
   }
 }
 
