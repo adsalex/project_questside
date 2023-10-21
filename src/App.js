@@ -1,97 +1,15 @@
 import logo from './logo.svg';
 //import './App.css';
 import React,{useState} from 'react';
-import {useNavigate} from 'react-router-dom'
+import {Navigate, useNavigate} from 'react-router-dom'
 import main from"./main.module.css" 
 import Selector from './selector';
+import ErrorPage from './error.js';
 import selstyle from "./selector.module.css"
 import { BrowserRouter, Route, Routes, json, useLocation } from 'react-router-dom';
 const mute_icon = "./Mute_Icon.svg"
 const pause_icon = "./pause.svg"
-var myquest={
-  style:
-  {
-
-  },
-  desсription:"Утро, обычный дом, и ничего интересного, только какой то человек пишет жизнь за вас "
-  ,
-  music:["sr2.mp4","human.mp4"],
-  "variables":
-  {
-      "visible":{"room":"22","kll":"33"},
-      "hidden":{}
-  },
-  "start_from":"main_room",
-  "rooms":
-  {
-      "main_room":
-      {"text":"вы в гостинной сейчас стоите <$ins>kll<$ins> <$ins>room<$ins>","image":"/human.mp4",isvid:0,
-      "options":[
-          {"text":"перейти на кухню","move":"kitchen","stringf":[{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"},{va:"<$ins>room",vb:"33",operator:"+",write_to:"room"}]
-          /* "change":{cell:"room",value:"22"} */},
-          {"text":"перейти в ванную <$ins>kll<$ins>", 
-          ifsw:[{a_val:"<$ins>room",b_val:"22", operator:"=",
-            then:{"move":"balcony","change":[{cell:"room",value:"22"},{cell:"kll",value:"kithcen 453"}]},
-            qelse:{"move":"balcony","change":[{cell:"room",value:"22"}]}
-          },
-          {a_val:"<$ins>room",b_val:"22", operator:"=",
-          then:
-          {
-            ifsw:[{a_val:"<$ins>room",b_val:"22", operator:"=",
-            then:{"move":"main_room","change":[{cell:"kick",value:"kithcen 9990"},{cell:"kll",value:"kithcen 453"}]},
-            qelse:{"move":"balcony","change":[{cell:"kick",value:"kithcen 99977"}]}}]
-          },
-          qelse:{"move":"balcony","change":[{cell:"room",value:"kithcen 778"}]}
-          }
-        ],
-          "move":"balcony","change":[{cell:"room",value:"kithcen 333"}] },
-          
-          {"text":"перейти в спальню",
-            qswitch:[
-            {
-              cell:"room",
-              cases:{
-                "22":{"move":"kitchen","change":{cell:"room",value:"swi223399"}},
-                "33":{"move":"kitchen","change":{cell:"room",value:"sih 33uu77"}},
-                "44":{"move":"kitchen","change":{cell:"room",value:"sw 889hgfgg"}}},
-              qdefault:{"move":"kitchen","change":{cell:"room",value:"default vcase"}}
-            },
-            {
-              cell:"room",
-              cases:{
-                "22":{"move":"kitchen","change":{cell:"room",value:"swi223399"}},
-                "33":{"move":"kitchen","change":{cell:"room",value:"sih 33uu77"}},
-                "44":{"move":"kitchen","change":{cell:"room",value:"sw 889hgfgg"}}},
-              qdefault:{"move":"kitchen","change":{cell:"room",value:"default vcase"}}
-            }
-          ]
-          }
-     ]},
-      "kitchen":
-      {"text":"кухня, пахнет горелым","image":"logo192.png",
-      "options":[
-          {"text":"перейти в гостинную"},
-          {"text":"перейти в ванную"},
-          {"text":"перейти в спальню"}
-     ]},
-      "balcony":
-      {"text":"ой это балкон","image":"",
-      "options":[
-          {"text":"перейти на кухню"},
-          {"text":"перейти в ванную"},
-          {"text":"перейти в спальню"}
-     ]},
-      "garage":{},
-      "final":{},
-      "bedroom":
-      {"text":"спальня, обычная, как мне видно","image":"",
-      "options":[
-          {"text":"перейти на кухню"},
-          {"text":"перейти в ванную"},
-          {"text":"перейти в спальню"}
-     ]}
-  }
-}
+var myquest
 
 function App()
 {
@@ -100,6 +18,7 @@ function App()
   <Routes>
     <Route path='' element={<Selector/>}></Route>
     <Route path='*' element={<Selector/>}></Route>
+    <Route path='error' element={<ErrorPage/>}/>
     <Route path='game' element={<Routed_App/>}></Route>
   </Routes>
   </BrowserRouter>
@@ -107,36 +26,43 @@ function App()
 }
 
 function Routed_App() {
-  const [quest_resp,getQuest]=useState("")
+  const [quest_resp,getQuest]=useState({error:"500"})
   const [questTrig,setTrig]=useState(true)
   const [game_menu,start_game]=React.useState(false)
   const [pause_val,pause_func]=React.useState(false)
+  let serv_ok = true
+  const serv_redir = useNavigate()
   let Location =useLocation().search
   if(Location){Location =Location.substring(1)}// delete ?
   console.log(Location)
-  if(questTrig){
+  if(questTrig)
+  {
   let respon =  fetch("http://localhost:3300/load?q="+Location)
     .then((response) => response.json())
     .then((response) => {
             console.log(response)
             getQuest(response)
-            setTrig(false)//resp_dat =response//this.setState({isLoaded: true});
-    })
+            setTrig(false)
+    }).catch(()=>{getQuest({error:"500"});setTrig(false)})
+    setTrig(false)
   }
+  console.log( quest_resp)
+  if(quest_resp.error==404){return(<ErrorPage errorCode={404}/>)}
   myquest = (quest_resp)
   console.log(quest_resp)
+  if(!quest_resp.error){
   if(game_menu)
   {
-    //return(<Selector/>)
+    
     return (<Quest_Table unmuted={pause_val} />)  
   }
   else
   {
-    console.log(myquest.music)
     return (<StartWindow description={myquest.description}
        start_button={start_game}
        pauser={pause_func} paused={pause_val}/>)
   }
+  }else{return(<ErrorPage errorCode={500}/>)}
 }
 
 class Quest_Table extends React.Component
@@ -423,6 +349,8 @@ class Audio_player extends React.Component
       src={myquest.music[this.state.track]}/>
       <img onClick={this.play_pause}  src={pause_icon} className={main.pause_button}/> 
       <img onClick={this.mute_unmute} src={mute_icon} className={main.mute_button}/> 
+      <NavBut/>
+      <img onClick={()=>{window.location.reload(false)}} src={mute_icon} className={main.mute_button}/> 
       </div>)
   }
   mute_unmute(handler)//{}
@@ -447,10 +375,11 @@ class Audio_player extends React.Component
   }
 }
 
-/* Quest_Table.prototype.concat=function()
+function NavBut()
 {
-
-} */
+  const toHome = useNavigate()
+  return(<img onClick={()=>{toHome("/")}}  src={pause_icon} className={main.pause_button}/> )
+}
 
 class StartWindow extends React.Component
 {
