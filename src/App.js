@@ -1,23 +1,46 @@
 import logo from './logo.svg';
 //import './App.css';
+import { configureStore } from '@reduxjs/toolkit'
+
 import React,{useState} from 'react';
 import {Navigate, useNavigate} from 'react-router-dom'
 import main from"./main.module.css" 
 import Selector from './selector';
+import { List, Map } from 'immutable'; 
+import Immutable from 'immutable';
 import ErrorPage from './error.js';
 import selstyle from "./selector.module.css"
 import { BrowserRouter, Route, Routes, json, useLocation } from 'react-router-dom';
+import Faq from './faq';
+import AboutUs from './about';
+import useHome from './useFold';
+import { configure } from '@testing-library/react';
 const mute_icon = "./Mute_Icon.svg"
 const pause_icon = "./pause.svg"
 var myquest
+const reducer = (state = 0, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + 1;
+    case 'DECREMENT':
+      return state - 1;
+    default: // Действие по умолчанию — это возврат текущего состояния
+      return state;
+  }
+};
+//const store2=configureStore(reducer)
+
 
 function App()
 {
+
   return (
   <BrowserRouter>
   <Routes>
     <Route path='' element={<Selector/>}></Route>
     <Route path='*' element={<Selector/>}></Route>
+    <Route path='faq' element={<Faq/>}></Route>
+    <Route path='about' element={<AboutUs/>}/>
     <Route path='error' element={<ErrorPage/>}/>
     <Route path='game' element={<Routed_App/>}></Route>
   </Routes>
@@ -377,8 +400,8 @@ class Audio_player extends React.Component
 
 function NavBut()
 {
-  const toHome = useNavigate()
-  return(<img onClick={()=>{toHome("/")}}  src={pause_icon} className={main.pause_button}/> )
+  const home=useHome()
+  return(<img onClick={()=>{home()}}  src={pause_icon} className={main.pause_button}/> )
 }
 
 class StartWindow extends React.Component

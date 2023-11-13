@@ -5,7 +5,7 @@ function PageBar(props)
 {
 const move = useNavigate()
 const [opt_counter,setOpt]=useState(0)
-const move_map =[{name:"qu_side",path:"/"},{name:"о нас",path:"/"},{name:"faq",path:"/"}]
+const move_map =[{name:"qu_side",path:"/"},{name:"о нас",path:"/about"},{name:"faq",path:"/faq"}]
 return(
 <div className={style.pagebar}>
 <span 
