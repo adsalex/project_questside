@@ -28,7 +28,6 @@ function Selector()
     const [dirset,getdir]=useState("")
     const [dirTrig,trigSet]=useState(true)
     const [serv_ok,setStatus]=useState(true)
-    //const navi =useNavigate()
     if(dirTrig){
     let respon =  fetch("http://localhost:3300/list")
     .then((response) => response.json())

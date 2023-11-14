@@ -1,5 +1,7 @@
 import PageBar from "./pagebar";
 import style from "./main.module.css"
+
+
 function ErrorPage(props)
 {
 let errorNames={404:"Человек, тут ничего интересного нет",

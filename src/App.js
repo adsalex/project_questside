@@ -1,7 +1,5 @@
 import logo from './logo.svg';
 //import './App.css';
-import { configureStore } from '@reduxjs/toolkit'
-
 import React,{useState} from 'react';
 import {Navigate, useNavigate} from 'react-router-dom'
 import main from"./main.module.css" 
@@ -14,26 +12,15 @@ import { BrowserRouter, Route, Routes, json, useLocation } from 'react-router-do
 import Faq from './faq';
 import AboutUs from './about';
 import useHome from './useFold';
-import { configure } from '@testing-library/react';
 const mute_icon = "./Mute_Icon.svg"
 const pause_icon = "./pause.svg"
 var myquest
-const reducer = (state = 0, action) => {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1;
-    case 'DECREMENT':
-      return state - 1;
-    default: // Действие по умолчанию — это возврат текущего состояния
-      return state;
-  }
-};
-//const store2=configureStore(reducer)
 
 
 function App()
 {
-
+  
+  //const dispatch = useDispatch()
   return (
   <BrowserRouter>
   <Routes>
@@ -49,6 +36,7 @@ function App()
 }
 
 function Routed_App() {
+  //const dispatch = useDispatch()
   const [quest_resp,getQuest]=useState({error:"500"})
   const [questTrig,setTrig]=useState(true)
   const [game_menu,start_game]=React.useState(false)

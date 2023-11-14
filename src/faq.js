@@ -73,4 +73,5 @@ class Foldable_Tframe extends Component
      }
 }
 export default Faq;
-//export  Textframe;
+
+
