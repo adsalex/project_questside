@@ -18,9 +18,7 @@ const initialState = {
     // Редьюсеры в слайсах меняют состояние и ничего не возвращают
     reducers: {
       increment: (state) => {
-        if(state.value>2){state.value=0}
-        state.value += 1;
-        
+        state.value = (state.value + 1) % 3;
       },
       
     }
@@ -41,31 +39,13 @@ const move_map =[{name:"qu_side",path:"/"},{name:"о нас",path:"/about"},{nam
 return(
 <div className={style.pagebar}>
 <span 
-onClick={()=>{move(move_map[opt_counter].path)}}>{move_map[count].name}</span>{/*()=>{move(move_map[opt_counter].path)}}>{move_map[opt_counter].name}</span>*/}
+onClick={()=>{move(move_map[count].path)}}>{move_map[count].name}</span>
 <span className={""} 
 onClick={
             ()=>{dispatch(increment())}
-
-            //()=>{if(opt_counter<move_map.length-1){setOpt(1+opt_counter);dispatch(action())}else{setOpt(0)}}
         }
     >{">"}</span>
 </div>)
 }
 export default PageBar
 
-
-/*
-
-const dispatch = useDispatch()
-const move = useNavigate()
-const [opt_counter,setOpt]=useState(0)
-const move_map =[{name:"qu_side",path:"/"},{name:"о нас",path:"/about"},{name:"faq",path:"/faq"}]
-return(
-<div className={style.pagebar}>
-<span 
-onClick={()=>{move(move_map[opt_counter].path)}}>{move_map[opt_counter].name}</span>
-<span className={""} 
-onClick={()=>{if(opt_counter<move_map.length-1){setOpt(1+opt_counter)}else{setOpt(0)}}}>{">"}</span>
-</div>)
-}
-*/

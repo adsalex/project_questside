@@ -1,9 +1,9 @@
 .main_part{width: 100%; background-color: wheat;margin-top: 2em;padding-top: 1em;padding-bottom: 1em;}
 .body_part{width: 100%; background-color: rgb(246, 234, 212);}
 .header{width: 90%;margin: auto; background-color: rgba(0, 0, 0, 0.679);color: white;
-    box-sizing: border-box;font-size: 28px;
+    box-sizing: border-box;font-size: 32px;
     min-height: 1.5rem;padding: 1rem;}
 .text_frame{width: 90%;margin: auto; background-color: rgba(25, 25, 25, 0.595);
     color: white;min-height: 5em;
-    padding: 1rem;font-size: 24px;
+    padding: 1rem;font-size: 28px;
     box-sizing: border-box;}

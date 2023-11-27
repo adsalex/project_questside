@@ -13,7 +13,7 @@ function Selection_section( props )
     .then((response) => response.text())
     .then((response) => {
             console.log(response)
-            getResp(response)//resp_dat =response//this.setState({isLoaded: true});
+            getResp(response)
     })
 
     return(<div className={style.Selection_section}>
@@ -39,10 +39,11 @@ function Selector()
     trigSet(false)
     }
     let select_buff=[]
+    let keynum=0
     for(let file of dirset)
     {
         console.log(file)
-        select_buff.push(<Selection_section desc_text={test} header={file.name.substring(0,file.name.lastIndexOf(".json"))}/>)
+        select_buff.push(<Selection_section key={keynum++} desc_text={test} header={file.name.substring(0,file.name.lastIndexOf(".json"))}/>)
     }
     console.log(serv_ok)
     if(serv_ok){

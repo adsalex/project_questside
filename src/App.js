@@ -14,6 +14,9 @@ import AboutUs from './about';
 import useHome from './useFold';
 const mute_icon = "./Mute_Icon.svg"
 const pause_icon = "./pause.svg"
+const reset_icon = "./restart.svg"
+const nav_icon = "./home.svg"
+
 var myquest
 
 
@@ -331,7 +334,7 @@ render()
   for(let elem in this.props.options)
   {
     const constbuff =indcount
-    opt_buffer.push(<p className={main.quest_buttons}
+    opt_buffer.push(<p key={indcount} className={main.quest_buttons}
     onClick={(handler)=>(this.props.trans_f(handler,constbuff,this.props.room))}>
     {this.props.inserter(this.props.options[elem].text)}</p>)
     indcount++
@@ -361,7 +364,7 @@ class Audio_player extends React.Component
       <img onClick={this.play_pause}  src={pause_icon} className={main.pause_button}/> 
       <img onClick={this.mute_unmute} src={mute_icon} className={main.mute_button}/> 
       <NavBut/>
-      <img onClick={()=>{window.location.reload(false)}} src={mute_icon} className={main.mute_button}/> 
+      <img onClick={()=>{window.location.reload(false)}} src={reset_icon} className={main.reset_button}/> 
       </div>)
   }
   mute_unmute(handler)//{}
@@ -389,7 +392,7 @@ class Audio_player extends React.Component
 function NavBut()
 {
   const home=useHome()
-  return(<img onClick={()=>{home()}}  src={pause_icon} className={main.pause_button}/> )
+  return(<img onClick={()=>{home()}}  src={nav_icon} className={main.nav_button}/> )
 }
 
 class StartWindow extends React.Component
