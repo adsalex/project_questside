@@ -1,14 +1,9 @@
-import logo from './logo.svg';
-//import './App.css';
 import React,{useState} from 'react';
-import {Navigate, useNavigate} from 'react-router-dom'
 import main from"./main.module.css" 
 import Selector from './selector';
-import { List, Map } from 'immutable'; 
-import Immutable from 'immutable';
 import ErrorPage from './error.js';
 import selstyle from "./selector.module.css"
-import { BrowserRouter, Route, Routes, json, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Faq from './faq';
 import AboutUs from './about';
 import useHome from './useFold';
@@ -44,14 +39,13 @@ function Routed_App() {
   const [questTrig,setTrig]=useState(true)
   const [game_menu,start_game]=React.useState(false)
   const [pause_val,pause_func]=React.useState(false)
-  let serv_ok = true
-  const serv_redir = useNavigate()
+
   let Location =useLocation().search
   if(Location){Location =Location.substring(1)}// delete ?
   console.log(Location)
   if(questTrig)
   {
-  let respon =  fetch("http://localhost:3300/load?q="+Location)
+  fetch("http://localhost:3300/load?q="+Location)
     .then((response) => response.json())
     .then((response) => {
             console.log(response)
@@ -98,8 +92,7 @@ render()
   return (<div id={main.quest_app}>
     <PicFrame source={myquest.rooms[this.state.current_room].image} 
     isvideo={myquest.rooms[this.state.current_room].isvid}/>
-   {/*  <div id='vars_text'>{wrapper(myquest.variables.visible) }</div> */}
-    <div id={main.storybox}>{textbuffer/* myquest.rooms[this.state.current_room]["text"] */} </div>
+    <div id={main.storybox}>{textbuffer} </div>
     <div id={main.option_bar}>
     <Quest_Options  inserter={this.instex} options={myquest.rooms[this.state.current_room]["options"]}
     room={this.state.current_room}
@@ -153,7 +146,7 @@ let arr_iter=oper_obj.length
 if(Array.isArray(oper_obj)){}
 //else{}
 for(let it_counter=0; it_counter<arr_iter;it_counter++){
-let varname_buff_a=null//this.cut_var(oper_obj[it_counter].va)
+let varname_buff_a=null
 if(typeof oper_obj[it_counter].va =="string")
 {varname_buff_a=(oper_obj[it_counter].va.replace("<$ins>","")) }
 
@@ -294,7 +287,7 @@ string_work(string_obj)
   let swork_arr=string_obj.length
 console.log(string_obj)
   for(let st_counter=0;st_counter<swork_arr;st_counter++){ let buffer
-  let varname_buff_a=null//this.cut_var(oper_obj[it_counter].va)
+  let varname_buff_a=null
   if(typeof string_obj[st_counter].va =="string")
   {varname_buff_a=(string_obj[st_counter].va.replace("<$ins>","")) }
   string_obj[st_counter].va=(this.get_var(string_obj[st_counter].va))
@@ -432,7 +425,6 @@ class PicFrame extends React.Component
   render()
   {
     let novid=false
-    
     let file_split=this.props.source.split(".")
     let file_ext=file_split[file_split.length-1].toLowerCase()
     const img_array=["bmp", "gif", "jpg", "jpeg", "png", "webp","svg"]

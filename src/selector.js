@@ -1,7 +1,7 @@
 import { useState } from "react"
 import PageBar from "./pagebar"
 import style from "./selector.module.css" 
-import { Navigate, useNavigate } from "react-router-dom"
+import {  useNavigate } from "react-router-dom"
 import ErrorPage from "./error"
 const test ="fLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
 const butt_text = "Начать"
@@ -9,7 +9,7 @@ const butt_text = "Начать"
 function Selection_section( props )
 {   const [resp_dat,getResp]=useState("")
     const navi =useNavigate()
-    let respon =  fetch("http://localhost:3300/preload?q="+props.header)
+     fetch("http://localhost:3300/preload?q="+props.header)
     .then((response) => response.text())
     .then((response) => {
             console.log(response)
@@ -29,7 +29,7 @@ function Selector()
     const [dirTrig,trigSet]=useState(true)
     const [serv_ok,setStatus]=useState(true)
     if(dirTrig){
-    let respon =  fetch("http://localhost:3300/list")
+    fetch("http://localhost:3300/list")
     .then((response) => response.json())
     .then((response) => {
             getdir(response);
@@ -52,6 +52,5 @@ function Selector()
         {select_buff}
     </div>))}
     else{return(<ErrorPage errorCode={500}/>)}
-   
   }
 export default Selector;

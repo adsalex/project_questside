@@ -1,12 +1,10 @@
-import { useState } from "react"
+
 import { useNavigate } from "react-router-dom"
 import style from "./main.module.css"
 import { useDispatch ,useSelector } from "react-redux"
-import { Questreducer } from "."
+
 import { createSlice } from "@reduxjs/toolkit"
 import { configureStore } from '@reduxjs/toolkit'
-//import { counterSlice } from './pagebar';
-
 
 const initialState = {
   value: 0,
@@ -15,7 +13,6 @@ const initialState = {
  export const counterSlice = createSlice({
     name: 'counter',
     initialState,
-    // Редьюсеры в слайсах меняют состояние и ничего не возвращают
     reducers: {
       increment: (state) => {
         state.value = (state.value + 1) % 3;
@@ -34,7 +31,6 @@ function PageBar(props)
 let count =useSelector((state) => state.value)
 const dispatch = useDispatch()
 const move = useNavigate()
-const [opt_counter,setOpt]=useState(0)
 const move_map =[{name:"qu_side",path:"/"},{name:"о нас",path:"/about"},{name:"faq",path:"/faq"}]
 return(
 <div className={style.pagebar}>
