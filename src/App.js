@@ -36,7 +36,7 @@ function App()
 }
 
 function Routed_App() {
-  //const dispatch = useDispatch()
+
   const [quest_resp,getQuest]=useState({error:"500"})
   const [questTrig,setTrig]=useState(true)
   const [game_menu,start_game]=React.useState(false)
