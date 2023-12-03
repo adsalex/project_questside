@@ -1,7 +1,7 @@
 import PageBar from "./pagebar";
 import style from "./descpages.module.css"
 
-import { Component, useState,React, createRef, forwardRef } from "react";
+import { Component,React} from "react";
 function Faq(props)
 {
 return(
