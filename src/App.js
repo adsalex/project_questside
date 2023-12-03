@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Faq from './faq';
 import AboutUs from './about';
 import useHome from './useFold';
+//jest  
 const mute_icon = "./Mute_Icon.svg"
 const pause_icon = "./pause.svg"
 const reset_icon = "./restart.svg"
@@ -28,7 +29,8 @@ function App()
     <Route path='about' element={<AboutUs/>}/>
     <Route path='error' element={<ErrorPage/>}/>
     <Route path='game' element={<Routed_App/>}></Route>
-  </Routes>
+    
+     </Routes>
   </BrowserRouter>
   )
 }

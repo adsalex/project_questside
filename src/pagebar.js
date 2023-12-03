@@ -20,7 +20,7 @@ const initialState = {
       
     }
   });
-   const { increment} = counterSlice.actions;
+  export const { increment} = counterSlice.actions;
 
    export const Queststore = configureStore({
     reducer: counterSlice.reducer
